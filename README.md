@@ -9,23 +9,23 @@ Location:
 
 Entry point:
 - Top-level ASGI module: main.py exporting `app`
-- Start command (preview/CI): `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Start command: `uvicorn main:app --host 0.0.0.0 --port 3000`
 
 Environment:
 - Copy `.env.example` to `.env` and adjust as needed.
-- Supported ports: 3000, 3001, 3002, 5000. If `PORT` is not set, defaults to 3000.
+- Supported ports: 3000, 3001, 3002, 5000. Default: 3000.
 
 Example:
 ```
 cd sda-satellite-link-216445-217127/ManagementandControlService
 cp .env.example .env
-# optionally edit .env to set PORT
 pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port ${PORT:-3000}
+uvicorn main:app --host 0.0.0.0 --port 3000
 ```
 
-Health check:
-- GET `http://localhost:${PORT:-3000}/` returns `{ "message": "Healthy" }`.
+Health and Swagger:
+- Health: http://localhost:3000/
+- Docs: http://localhost:3000/docs
 
 ## Notes
 

@@ -1,13 +1,9 @@
 """
 Top-level ASGI entrypoint for the Management and Control Service.
 
-This module re-exports the FastAPI application instance as `app` to allow
-ASGI servers such as uvicorn or gunicorn to import it via:
-    uvicorn main:app --host 0.0.0.0 --port <PORT>
-
-It also provides an optional CLI entry point to run the service for local
-development. The port is determined from the PORT environment variable,
-falling back to an allowed default.
+- Exposes `app` imported from src.api.main so `uvicorn main:app` works.
+- When executed directly, runs uvicorn bound to 0.0.0.0 honoring env PORT,
+  defaulting to 3000 per project standard.
 """
 
 from __future__ import annotations
@@ -21,7 +17,6 @@ from src.api.main import app as app  # re-export for ASGI import
 # Explicit re-export for linters and import tools
 __all__ = ["app", "get_bind_host", "get_bind_port"]
 
-
 # Allowed ports for the environment. Do not change without coordination.
 _ALLOWED_PORTS: Final[List[int]] = [3000, 3001, 3002, 5000]
 _DEFAULT_PORT: Final[int] = 3000
@@ -33,7 +28,7 @@ def _get_port_from_env() -> int:
     Resolve the port from the environment variable PORT, ensuring it is within the allowed set.
 
     Returns:
-        int: The resolved port number.
+        int: The resolved port number. Defaults to 3000.
     """
     raw_port = os.getenv("PORT", "").strip()
     if raw_port:
@@ -41,9 +36,13 @@ def _get_port_from_env() -> int:
             port = int(raw_port)
             if port in _ALLOWED_PORTS:
                 return port
+            logging.getLogger(__name__).warning(
+                "PORT %s not allowed; falling back to default %s", port, _DEFAULT_PORT
+            )
         except ValueError:
-            # Fall through to default if invalid
-            pass
+            logging.getLogger(__name__).warning(
+                "Invalid PORT value '%s'; falling back to default %s", raw_port, _DEFAULT_PORT
+            )
     return _DEFAULT_PORT
 
 
