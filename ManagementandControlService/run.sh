@@ -14,7 +14,11 @@ fi
 # Export sensible defaults
 export PYTHONUNBUFFERED=1
 
+# Read environment configuration with sensible defaults
+PORT="${PORT:-5000}"
+HOST="${HOST:-0.0.0.0}"
+
 # Start uvicorn with the proper module path and host/port
 # This avoids relying on a venv and uses the correct ASGI app import path.
-echo "Starting ManagementandControlService on http://0.0.0.0:5000 (ASGI: app.main:app)"
-exec uvicorn app.main:app --host 0.0.0.0 --port 5000
+echo "Starting ManagementandControlService on http://${HOST}:${PORT} (ASGI: app.main:app)"
+exec uvicorn app.main:app --host "${HOST}" --port "${PORT}"
