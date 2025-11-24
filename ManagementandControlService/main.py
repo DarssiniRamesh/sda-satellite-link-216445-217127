@@ -42,5 +42,10 @@ except Exception:
 
 # PUBLIC_INTERFACE
 def get_app():
-    """Return the FastAPI app for programmatic usage."""
+    """
+    Return the FastAPI app for programmatic usage.
+
+    Returns:
+        The FastAPI application instance.
+    """
     return app

@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # PUBLIC_INTERFACE
 # Bootstrap script: creates/activates a virtualenv, installs dependencies,
-# validates FastAPI import, and starts uvicorn main:app.
+# validates FastAPI and Uvicorn imports, and starts uvicorn main:app.
 # Usage:
 #   ./bootstrap.sh
 #   PORT=8000 HOST=127.0.0.1 ./bootstrap.sh
@@ -36,13 +36,14 @@ else
   echo "requirements.txt not found in $(pwd)."
 fi
 
-echo "Validating FastAPI import..."
+echo "Validating FastAPI and Uvicorn imports..."
 python - <<'PYCODE'
 try:
     import fastapi  # noqa: F401
-    print("FastAPI import OK")
+    import uvicorn  # noqa: F401
+    print("FastAPI and Uvicorn import OK")
 except Exception as e:
-    raise SystemExit(f"FastAPI import failed: {e}")
+    raise SystemExit(f"Preflight import failed: {e}")
 PYCODE
 
 echo "Starting uvicorn main:app on ${HOST}:${PORT}..."

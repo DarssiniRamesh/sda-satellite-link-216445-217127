@@ -4,6 +4,10 @@ This repository contains the Management and Control Service (FastAPI) for the SD
 
 ## Quick start (local)
 
+Preferred: Use run.sh (ensures venv, installs deps, preflight checks, starts server)
+  ./run.sh
+  PORT=8000 HOST=127.0.0.1 ./run.sh
+
 Option A: Use bootstrap.sh (creates venv, installs deps, starts server)
   ./bootstrap.sh
   PORT=8000 HOST=127.0.0.1 ./bootstrap.sh
