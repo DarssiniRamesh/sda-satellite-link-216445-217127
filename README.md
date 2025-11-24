@@ -5,7 +5,8 @@ This is the initial README file for the project.
 ## ManagementandControlService
 
 - App entrypoint: `sda-satellite-link-216445-217127/ManagementandControlService/app/main.py`
-- Uvicorn start command: `uvicorn app.main:app --host 0.0.0.0 --port 5000`
+- Uvicorn start command: `uvicorn app.main:app --host 0.0.0.0 --port 5000` (preferred)
+- ASGI import shim is available, so `uvicorn main:app --host 0.0.0.0 --port 5000` also works
 - Health endpoint: `GET /health` returns `{ "status": "ok", "service": "ManagementandControlService", "version": "0.1.0" }`
 
 Quick start:
