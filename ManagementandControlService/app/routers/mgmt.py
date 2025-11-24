@@ -5,7 +5,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from ..models.mgmt_frames import MGMT, MGMTFrame, MGMTFrameType
+from ..models.mgmt_frames import MGMTFrame, MGMTFrameType
 from ..services.mgmt_registry import MGMTRegistryService, get_mgmt_service
 
 router = APIRouter(prefix="/mgmt", tags=["mgmt"])
