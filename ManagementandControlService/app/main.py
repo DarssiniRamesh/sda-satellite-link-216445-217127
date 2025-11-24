@@ -29,9 +29,21 @@ class Settings(BaseSettings):
     VERSION: str = Field("0.1.0", description="Service version")
     PORT: int = Field(5000, description="Default port to run the service")
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    # Pydantic v2 configuration: load .env and ignore unrelated env vars
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "extra": "ignore",
+    }
+
+    # Optional environment variables that may be present in the runtime
+    # These defaults ensure service starts even if provided
+    uvicorn_host: str = Field("0.0.0.0", description="Host for uvicorn to bind")
+    uvicorn_workers: int | None = Field(None, description="Number of uvicorn workers")
+    node_env: str | None = Field(None, description="Node-like environment indicator")
+    request_timeout_ms: int | None = Field(None, description="Default request timeout in ms")
+    rate_limit_window_s: int | None = Field(None, description="Rate limit window in seconds")
+    rate_limit_max: int | None = Field(None, description="Max requests per window")
 
 
 # Instantiate settings once; FastAPI will reuse this instance
