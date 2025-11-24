@@ -19,5 +19,5 @@ COPY . /app
 ENV PORT=5000
 EXPOSE 5000
 
-# Run with uvicorn pointing to root-level main:app
+# Run with uvicorn pointing to root-level main:app (imports ManagementandControlService app)
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-5000}"]
