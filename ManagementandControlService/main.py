@@ -13,6 +13,7 @@ import os
 from typing import Final, List
 
 from src.api.main import app as app  # re-export for ASGI import
+"""FastAPI app instance re-exported for uvicorn entrypoint (main:app)."""
 
 # Explicit re-export for linters and import tools
 __all__ = ["app", "get_bind_host", "get_bind_port"]

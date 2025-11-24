@@ -24,7 +24,8 @@ uvicorn main:app --host 0.0.0.0 --port 3000
 ```
 
 Health and Swagger:
-- Health: http://localhost:3000/
+- Liveness: http://localhost:3000/
+- Readiness: http://localhost:3000/health
 - Docs: http://localhost:3000/docs
 
 ## Notes
