@@ -5,7 +5,8 @@ import os
 from typing import Dict
 
 from fastapi import FastAPI
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 # Configure basic logging for the service
 logging.basicConfig(
