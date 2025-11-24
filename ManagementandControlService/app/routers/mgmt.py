@@ -5,7 +5,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-# Import only existing exports from mgmt_frames
+# Import only existing exports from mgmt_frames (drop nonexistent MGMT)
 from ..models.mgmt_frames import MGMTFrame, MGMTFrameType
 from ..services.mgmt_registry import MGMTRegistryService, get_mgmt_service
 
@@ -49,7 +49,6 @@ def encode_frame(req: EncodeRequest, reg: MGMTRegistryService = Depends(get_mgmt
         payload = bytes.fromhex(req.payload_hex) if req.payload_hex else b""
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid payload hex") from exc
-    # Use MGMTFrame (correct existing type) not nonexistent 'MGMT'
     frame = MGMTFrame(frame_type=req.frame_type, header=req.header, payload=payload)
     raw = reg.encode(frame)
     return EncodeResponse(frame_hex=raw.hex())
