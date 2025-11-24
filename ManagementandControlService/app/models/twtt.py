@@ -17,9 +17,13 @@ class ETWTTRequest(BaseModel):
 
 
 def compute_twtt(tx_ns: int, rx_ns: int) -> TWTTData:
-    """Compute round-trip and one-way delay assuming symmetric path."""
+    """Compute round-trip and one-way delay assuming symmetric path.
+
+    Requirements:
+    - REQ-MGMT-TWTT: validate timestamp ordering (rx >= tx) and compute deltas.
+    """
     if rx_ns < tx_ns:
-        raise ValueError("rx_timestamp must be >= tx_timestamp")
+        raise ValueError("REQ-MGMT-TWTT: rx_timestamp_ns must be >= tx_timestamp_ns")
     rtt = rx_ns - tx_ns
     return TWTTData(tx_timestamp_ns=tx_ns, rx_timestamp_ns=rx_ns, round_trip_time_ns=rtt, one_way_delay_ns=rtt // 2)
 

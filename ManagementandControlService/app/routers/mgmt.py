@@ -49,8 +49,22 @@ def encode_frame(req: EncodeRequest, reg: MGMTRegistryService = Depends(get_mgmt
         payload = bytes.fromhex(req.payload_hex) if req.payload_hex else b""
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid payload hex") from exc
+    # REQ-MGMT-FRAME: basic header validation
+    if "version" in req.header:
+        ver = req.header.get("version")
+        if not isinstance(ver, int) or ver < 1 or ver > 4:
+            raise HTTPException(status_code=400, detail="REQ-MGMT-FRAME: header.version must be 1..4")
+    if "length" in req.header:
+        ln = req.header.get("length")
+        if not isinstance(ln, int) or ln < 0 or ln > 9216:
+            raise HTTPException(status_code=400, detail="REQ-MGMT-FRAME: header.length invalid")
     frame = MGMTFrame(frame_type=req.frame_type, header=req.header, payload=payload)
     raw = reg.encode(frame)
+    # Round-trip check
+    try:
+        decoded = reg.decode(raw)
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"REQ-MGMT-FRAME: encode->decode failed: {exc}") from exc
     return EncodeResponse(frame_hex=raw.hex())
 
 
