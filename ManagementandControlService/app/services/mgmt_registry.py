@@ -13,12 +13,26 @@ class MGMTRegistryService:
 
     # PUBLIC_INTERFACE
     def encode(self, frame: MGMTFrame) -> bytes:
-        """Encode MGMT frame to bytes."""
+        """Encode MGMT frame to bytes.
+
+        Args:
+            frame: The management frame to encode.
+
+        Returns:
+            bytes: The raw encoded bytes.
+        """
         return self._registry.encode(frame)
 
     # PUBLIC_INTERFACE
     def decode(self, data: bytes) -> MGMTFrame:
-        """Decode bytes into MGMT frame."""
+        """Decode bytes into MGMT frame.
+
+        Args:
+            data: The raw frame bytes to decode.
+
+        Returns:
+            MGMTFrame: The decoded frame.
+        """
         return self._registry.decode(data)
 
 
