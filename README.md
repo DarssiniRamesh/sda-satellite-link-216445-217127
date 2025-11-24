@@ -27,8 +27,13 @@ Health and Swagger:
 - Liveness: http://localhost:3000/
 - Readiness: http://localhost:3000/health
 - Docs: http://localhost:3000/docs
+- OpenAPI: http://localhost:3000/openapi.json
+
+Preview environment:
+- The preview platform may bind the service to port 3010. This service now honors any valid PORT value.
+- Example for preview: `export PORT=3010 && uvicorn main:app --host 0.0.0.0 --port \"$PORT\"`
 
 ## Notes
 
-- Ports are standardized across containers to: 3000, 3001, 3002, 5000.
+- Defaults remain: Management=3000, DataPlane=3002, Protocol=5000. Any valid PORT is accepted.
 - Do not hardcode secrets or credentials in code. Use environment variables via `.env`.

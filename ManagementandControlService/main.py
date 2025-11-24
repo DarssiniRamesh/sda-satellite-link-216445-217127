@@ -18,33 +18,43 @@ from src.api.main import app as app  # re-export for ASGI import
 # Explicit re-export for linters and import tools
 __all__ = ["app", "get_bind_host", "get_bind_port"]
 
-# Allowed ports for the environment. Do not change without coordination.
-_ALLOWED_PORTS: Final[List[int]] = [3000, 3001, 3002, 5000]
+# Port/host defaults
 _DEFAULT_PORT: Final[int] = 3000
 _DEFAULT_HOST: Final[str] = "0.0.0.0"
 
 
-def _get_port_from_env() -> int:
+def _parse_port(value: str | None, default: int) -> int:
     """
-    Resolve the port from the environment variable PORT, ensuring it is within the allowed set.
+    Parse a port value from string and validate range 1..65535.
+
+    Args:
+        value: The string value from the environment or None.
+        default: The fallback port if parsing/validation fails.
 
     Returns:
-        int: The resolved port number. Defaults to 3000.
+        int: The validated port.
     """
-    raw_port = os.getenv("PORT", "").strip()
-    if raw_port:
-        try:
-            port = int(raw_port)
-            if port in _ALLOWED_PORTS:
-                return port
-            logging.getLogger(__name__).warning(
-                "PORT %s not allowed; falling back to default %s", port, _DEFAULT_PORT
-            )
-        except ValueError:
-            logging.getLogger(__name__).warning(
-                "Invalid PORT value '%s'; falling back to default %s", raw_port, _DEFAULT_PORT
-            )
-    return _DEFAULT_PORT
+    if not value:
+        return default
+    value = value.strip()
+    try:
+        port = int(value)
+    except (TypeError, ValueError):
+        logging.getLogger(__name__).warning("Invalid PORT value '%s'; falling back to default %s", value, default)
+        return default
+    if 1 <= port <= 65535:
+        return port
+    logging.getLogger(__name__).warning("PORT %s out of range; falling back to default %s", port, default)
+    return default
+
+
+def _get_port_from_env() -> int:
+    """
+    Resolve the port from the environment variable PORT.
+
+    Accepts any valid port in range 1..65535. Defaults to 3000.
+    """
+    return _parse_port(os.getenv("PORT"), _DEFAULT_PORT)
 
 
 def _configure_logging() -> None:
@@ -86,4 +96,6 @@ if __name__ == "__main__":
         raise
 
     logging.getLogger(__name__).info("Starting server on %s:%s", host, port)
+    logging.getLogger(__name__).info("Swagger UI: http://%s:%s/docs", host, port)
+    logging.getLogger(__name__).info("OpenAPI JSON: http://%s:%s/openapi.json", host, port)
     uvicorn.run("main:app", host=host, port=port, reload=False)
